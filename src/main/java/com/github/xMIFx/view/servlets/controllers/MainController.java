@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -50,9 +51,13 @@ public class MainController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addContact(@ModelAttribute("contact") Person person,
+    public String addContact(@ModelAttribute("person")@Valid Person person,
                              BindingResult result) {
-
+        logger.info("Start adding");
+        if (result.hasErrors()) {
+            logger.info("Erorr when binding");
+            return "main";
+        }
         personService.save(person);
 
         return "redirect:/main.do";

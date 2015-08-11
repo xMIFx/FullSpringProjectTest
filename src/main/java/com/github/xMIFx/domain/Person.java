@@ -1,8 +1,12 @@
 package com.github.xMIFx.domain;
 
+import com.github.xMIFx.utils.validators.Phone;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,10 +18,22 @@ import java.util.Date;
 @Table(name = "PERSONS")
 public class Person implements Serializable {
     private Long id;
+
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String name;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Past
     private Date birthDay;
+    @NotEmpty
+    @Email
     private String email;
+    @NotEmpty
+    @Phone
     private String phoneNumber;
+    @NotNull
+    @Min(350)
+    @Max(100000)
     private BigDecimal salary;
 
     public Person() {
@@ -53,6 +69,7 @@ public class Person implements Serializable {
         this.id = id;
     }
 
+
     @Column(name = "name")
     public String getName() {
         return name;
@@ -63,7 +80,6 @@ public class Person implements Serializable {
     }
 
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "birthDay")
     public Date getBirthDay() {
         return birthDay;
@@ -72,7 +88,6 @@ public class Person implements Serializable {
     public void setBirthDay(Date birthDay) {
         this.birthDay = birthDay;
     }
-
 
     @Column(name = "email")
     public String getEmail() {

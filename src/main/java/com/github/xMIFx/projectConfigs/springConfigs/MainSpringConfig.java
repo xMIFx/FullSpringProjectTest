@@ -17,18 +17,6 @@ import java.nio.charset.Charset;
         , "com.github.xMIFx.repositories.implementationForDAO"
         , "com.github.xMIFx.view.servlets"})
 public class MainSpringConfig {
-    @Bean(name = "messageSource")
-    public ReloadableResourceBundleMessageSource getMessageSource() {
-        ReloadableResourceBundleMessageSource resource = new ReloadableResourceBundleMessageSource();
-        resource.setBasename("classpath:messages");
-        resource.setDefaultEncoding("UTF-8");
-        return resource;
-    }
-
-    @Bean
-    public StringHttpMessageConverter stringHttpMessageConverter() {
-        return new StringHttpMessageConverter(Charset.forName("UTF-8"));
-    }
 
 }
 
