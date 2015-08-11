@@ -19,6 +19,8 @@ hs_err_pid*
 
 # IntelliJ project files
 .idea
+target
+classes
 *.iml
 out
 gen

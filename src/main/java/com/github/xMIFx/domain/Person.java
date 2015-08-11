@@ -1,5 +1,7 @@
 package com.github.xMIFx.domain;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,6 +21,8 @@ public class Person implements Serializable {
     private BigDecimal salary;
 
     public Person() {
+        this.salary = BigDecimal.valueOf(0.0);
+        this.birthDay = new Date();
     }
 
     public Person(String name, Date birthDay, String email, String phoneNumber, BigDecimal salary) {
@@ -58,7 +62,8 @@ public class Person implements Serializable {
         this.name = name;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "birthDay")
     public Date getBirthDay() {
         return birthDay;
@@ -114,7 +119,7 @@ public class Person implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d:[%s, %s] - [%s, %s] - %d", id, name, birthDay, email, phoneNumber, salary);
+        return String.format("%d:[%s, %s] - [%s, %s] - %10.2f", id, name, birthDay, email, phoneNumber, salary);
 
     }
 }

@@ -1,40 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Vlad
-  Date: 10.08.2015
-  Time: 22:54
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
-    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title><spring:message code="label.title" /></title>
 </head>
 <body>
 <div align="center">
-    <h1>Users List</h1>
-
-    <h2><a href="/new">New Person</a></h2>
-
-    <table border="1">
-        <th>No</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Actions</th>
-
-        <c:forEach var="person" items="${personList}" varStatus="status">
+    <h2><spring:message code="label.title" /></h2>
+    <form:form method="post" action="add" commandName="person">
+        <table>
             <tr>
-                <td>${status.index + 1}</td>
-                <td>${person.name}</td>
-                <td>${user.email}</td>
-                <td>
-                    <a href="/edit?id=${person.id}">Edit</a>
-                    <a href="/delete?id=${person.id}">Delete</a>
-                </td>
+                <td><form:label path="name">
+                    <spring:message code="label.name" />
+                </form:label></td>
+                <td><form:input path="name" /></td>
             </tr>
-        </c:forEach>
-    </table>
+            <tr>
+                <td><form:label path="email">
+                    <spring:message code="label.email" />
+                </form:label></td>
+                <td><form:input path="email" /></td>
+            </tr>
+            <tr>
+                <td><form:label path="phoneNumber">
+                    <spring:message code="label.phoneNumber" />
+                </form:label></td>
+                <td><form:input path="phoneNumber" /></td>
+            </tr>
+            <tr>
+                <td><form:label path="birthDay">
+                    <spring:message code="label.birthDay" />
+                </form:label></td>
+                <td><form:input path="birthDay" /></td>
+            </tr>
+            <tr>
+                <td><form:label path="salary">
+                    <spring:message code="label.salary" />
+                </form:label></td>
+                <td><form:input path="salary" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit"
+                                       value="<spring:message code="label.addcontact"/>" /></td>
+            </tr>
+        </table>
+    </form:form>
+
+    <h3><spring:message code="label.contacts" /></h3>
+        <table class="data">
+            <tr>
+                <th><spring:message code="label.name" /></th>
+                <th><spring:message code="label.email" /></th>
+                <th><spring:message code="label.phoneNumber" /></th>
+                <th><spring:message code="label.birthDay" /></th>
+                <th><spring:message code="label.salary" /></th>
+                <th>&nbsp;</th>
+            </tr>
+            <c:forEach items="${personList}" var="contact">
+                <tr>
+                    <td>${contact.name}</td>
+                    <td>${contact.email}</td>
+                    <td>${contact.phoneNumber}</td>
+                    <td>${contact.birthDay}</td>
+                    <td>${contact.salary}</td>
+                    <td><a href="delete/${contact.id}"><spring:message code="label.delete" /></a></td>
+                </tr>
+            </c:forEach>
+        </table>
 </div>
 </body>
 </html>

@@ -7,16 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Vlad on 10.08.2015.
@@ -31,23 +29,41 @@ public class MainController {
     private PersonService personService;
 
 
-    @ModelAttribute("stud")
+    @ModelAttribute("person")
     public Person createStudent() {
         return new Person();
     }
 
     @RequestMapping(value = "/")
-    protected String doRedirect(){
+    protected String doRedirect() {
         return "redirect:/main.do";
     }
 
-    @RequestMapping(value = "main.do" )
-    protected ModelAndView doGet(){
+    @RequestMapping(value = "main.do")
+    protected ModelAndView doGet() {
         List<Person> personList = personService.getAll();
         ModelAndView model = new ModelAndView("main");
         model.addObject("personList", personList);
+        logger.info(personList.toString());
         return model;
-
         /*return "main";*/
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addContact(@ModelAttribute("contact") Person person,
+                             BindingResult result) {
+
+        personService.save(person);
+
+        return "redirect:/main.do";
+    }
+
+    @RequestMapping("/delete/{personID}")
+    public String deleteContact(@PathVariable("personID") Long personID) {
+
+        Person person = personService.getById(personID);
+        personService.remove(person);
+
+        return "redirect:/main.do";
     }
 }

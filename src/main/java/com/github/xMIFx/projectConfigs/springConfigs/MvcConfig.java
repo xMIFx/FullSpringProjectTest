@@ -28,8 +28,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
     @Bean
     public InternalResourceViewResolver jspViewResolver() {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
+        bean.setContentType("text/html;charset=UTF-8");
         bean.setPrefix("/WEB-INF/pages/");
         bean.setSuffix(".jsp");
         return bean;
     }
+
 }

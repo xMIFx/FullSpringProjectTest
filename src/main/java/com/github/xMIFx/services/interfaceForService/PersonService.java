@@ -9,6 +9,10 @@ import java.util.List;
  */
 public interface PersonService {
     List<Person> getAll();
-    boolean save (Person person);
-    boolean remove (Person person);
+
+    boolean save(Person person);
+
+    boolean remove(Person person);
+
+    Person getById(Long id);
 }

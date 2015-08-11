@@ -4,12 +4,14 @@ import com.github.xMIFx.domain.Person;
 import com.github.xMIFx.repositories.interfacesForDAO.PersonDAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +23,13 @@ public class PersonHibernateDAOImpl implements PersonDAO {
     @Qualifier("sessionFact")
     private SessionFactory sessionFact;
 
-    @Transactional
+
     @Override
     public List<Person> getAll() {
-        Session session = sessionFact.getCurrentSession();
-        List<Person> personList = (List<Person>) session.createCriteria(Person.class).list();
+        List<Person> personList = new ArrayList<>();
+        try (Session session = sessionFact.openSession()) {
+            personList = (List<Person>) session.createCriteria(Person.class).list();
+        }
         return personList;
 
     }
@@ -44,5 +48,17 @@ public class PersonHibernateDAOImpl implements PersonDAO {
         Session session = sessionFact.getCurrentSession();
         session.delete(person);
         return true;
+    }
+
+
+    @Override
+    public Person getById(Long id) {
+        Person person = null;
+        try (Session session = sessionFact.openSession()) {
+            person = (Person) session.createCriteria(Person.class)
+                    .add(Restrictions.eq("id", id))
+                    .uniqueResult();
+        }
+        return person;
     }
 }

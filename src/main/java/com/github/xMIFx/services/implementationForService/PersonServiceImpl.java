@@ -34,4 +34,9 @@ public class PersonServiceImpl implements PersonService {
     public boolean remove(Person person) {
         return personDAO.remove(person);
     }
+
+    @Override
+    public Person getById(Long id) {
+        return personDAO.getById(id);
+    }
 }
