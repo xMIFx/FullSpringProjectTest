@@ -14,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -22,12 +23,14 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
+@EnableJpaRepositories(basePackages = "com.github.xMIFx.repositories.implementationForDAO")
 @PropertySource("classpath:jdbc.properties")
 public class DataBaseConfig {
     private static String CONFIG_FILE_LOCATION = "/hibernate.cfg.xml";
@@ -73,22 +76,24 @@ public class DataBaseConfig {
     }
 
 /*JPA*/
-    @Bean(name = "entityMan")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    @Bean(name = "entityManFac")
+    public LocalContainerEntityManagerFactoryBean entityManFac() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[]{"com.github.xMIFx.domain"});
+        em.setPersistenceUnitName("myPersistenceUnit");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(hibernateProperties());
 
         return em;
     }
+
     @Autowired
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManFac){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
+        transactionManager.setEntityManagerFactory(entityManFac);
 
         return transactionManager;
     }
@@ -97,7 +102,6 @@ public class DataBaseConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
         return new PersistenceExceptionTranslationPostProcessor();
     }
-
     /*Properties*/
     private Properties hibernateProperties() {
         Properties properties = new Properties();

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,13 +24,16 @@ import java.util.List;
  */
 public class PersonJPADAOImpl implements PersonDAO {
     @Autowired
-    @Qualifier("entityMan")
-    private EntityManagerFactory entityMan;
+    @Qualifier("entityManFac")
+    private EntityManagerFactory entityManFac;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<Person> getAll() {
         List<Person> personList = new ArrayList<>();
-        EntityManager entityManager = entityMan.createEntityManager();
+        /*EntityManager entityManager = entityManFac.createEntityManager();*/
           /*  personList = (List<Person>) entityManager.createC.createCriteria(Person.class).list();*/
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Person> q = cb.createQuery(Person.class);
@@ -43,7 +47,7 @@ public class PersonJPADAOImpl implements PersonDAO {
     @Transactional
     @Override
     public boolean save(Person person) {
-        EntityManager entityManager = entityMan.createEntityManager();
+        /*EntityManager entityManager = entityManFac.createEntityManager();*/
         entityManager.persist(person);
         return true;
     }
@@ -51,21 +55,21 @@ public class PersonJPADAOImpl implements PersonDAO {
     @Transactional
     @Override
     public boolean remove(Person person) {
-        EntityManager entityManager = entityMan.createEntityManager();
-        entityManager.remove(person);
+        entityManager.remove(entityManager.merge(person));
         return true;
     }
 
     @Override
     public Person getById(Long id) {
 
-        EntityManager entityManager = entityMan.createEntityManager();
+       /* EntityManager entityManager = entityManFac.createEntityManager();*/
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Person> q = cb.createQuery(Person.class);
         Root<Person> c = q.from(Person.class);
         ParameterExpression<Long> p = cb.parameter(Long.class);
         q.select(c).where(cb.equal(c.get("id"), p));
         TypedQuery<Person> tq = entityManager.createQuery(q);
+        tq.setParameter(p, id);
         Person person = tq.getSingleResult();
         return person;
     }
