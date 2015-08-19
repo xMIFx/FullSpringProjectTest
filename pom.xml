@@ -27,8 +27,8 @@
         <hibernate.version>5.0.0.CR4</hibernate.version>
         <validation-api>1.1.0.Final</validation-api>
         <hibernate-validator>5.2.0.Final</hibernate-validator>
-        <!--<maven.compiler.executable>${env.OPENSHIFT_WILDFLY_DIR}usr/lib/jvm/jdk1.8.0_5/bin/javac</maven.compiler.executable> 
-        <maven.compiler.fork>true</maven.compiler.fork>-->
+        <maven.compiler.executable>${env.OPENSHIFT_WILDFLY_DIR}usr/lib/jvm/jdk1.8.0_51/bin/javac</maven.compiler.executable> 
+        <maven.compiler.fork>true</maven.compiler.fork>
         </properties>
 
     <build>
