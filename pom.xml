@@ -30,7 +30,7 @@
         </properties>
 
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>fs</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -46,7 +46,7 @@
                 <configuration>
                     <source>${maven.version}</source>
                     <target>${maven.version}</target>
-                     <warName>ROOT</warName>
+                     <warName>fs</warName>
                     <compilerArgument></compilerArgument>
                 </configuration>
             </plugin>
