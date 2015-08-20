@@ -30,7 +30,7 @@
         </properties>
 
     <build>
-        <finalName>FullSpringProjectTest</finalName>
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -46,6 +46,7 @@
                 <configuration>
                     <source>${maven.version}</source>
                     <target>${maven.version}</target>
+                     <warName>ROOT</warName>
                     <compilerArgument></compilerArgument>
                 </configuration>
             </plugin>
