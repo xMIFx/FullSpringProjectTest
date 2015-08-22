@@ -38,6 +38,7 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>fs</warName>
                 </configuration>
             </plugin>
             <plugin>
@@ -46,7 +47,6 @@
                 <configuration>
                     <source>${maven.version}</source>
                     <target>${maven.version}</target>
-                     <warName>fs</warName>
                     <compilerArgument></compilerArgument>
                 </configuration>
             </plugin>

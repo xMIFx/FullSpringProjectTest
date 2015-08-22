@@ -1,10 +1,10 @@
 package com.github.xMIFx.projectConfigs.springConfigs;
 
 
-import com.github.xMIFx.repositories.implementationForDAO.PersonHibernateDAOImpl;
+
 import com.github.xMIFx.repositories.implementationForDAO.PersonJPADAOImpl;
 import com.github.xMIFx.repositories.interfacesForDAO.PersonDAO;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+
 import com.mchange.v2.c3p0.DriverManagerDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
+
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -23,10 +23,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManager;
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
@@ -48,7 +47,12 @@ public class DataBaseConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setProperties(c3p0Properties());
         dataSource.setDriverClass(env.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setJdbcUrl(env.getRequiredProperty("jdbc.url"));
+        if (System.getenv("OPENSHIFT_MYSQL_DB_HOST") != null) {
+            dataSource.setJdbcUrl("jdbc:mysql://" + System.getenv("OPENSHIFT_MYSQL_DB_HOST") + ":" +
+                    System.getenv("OPENSHIFT_MYSQL_DB_PORT"));
+        } else {
+            dataSource.setJdbcUrl(env.getRequiredProperty("jdbc.url"));
+        }
         dataSource.setUser(env.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
         return dataSource;
@@ -75,7 +79,7 @@ public class DataBaseConfig {
         return transactionManager;
     }
 
-/*JPA*/
+    /*JPA*/
     @Bean(name = "entityManFac")
     public LocalContainerEntityManagerFactoryBean entityManFac() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -91,17 +95,19 @@ public class DataBaseConfig {
 
     @Autowired
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManFac){
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManFac) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManFac);
 
         return transactionManager;
     }
+
     @Autowired
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
+
     /*Properties*/
     private Properties hibernateProperties() {
         Properties properties = new Properties();
