@@ -49,7 +49,8 @@ public class DataBaseConfig {
         dataSource.setDriverClass(env.getRequiredProperty("jdbc.driverClassName"));
         if (System.getenv("OPENSHIFT_MYSQL_DB_HOST") != null) {
             dataSource.setJdbcUrl("jdbc:mysql://" + System.getenv("OPENSHIFT_MYSQL_DB_HOST") + ":" +
-                    System.getenv("OPENSHIFT_MYSQL_DB_PORT"));
+                    System.getenv("OPENSHIFT_MYSQL_DB_PORT")
+                    + "/full_spring_project");
         } else {
             dataSource.setJdbcUrl(env.getRequiredProperty("jdbc.url"));
         }
